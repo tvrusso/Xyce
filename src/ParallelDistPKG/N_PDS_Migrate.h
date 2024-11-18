@@ -300,7 +300,7 @@ operator()( std::vector<int> const & pList,
                  + PackTraits<DT>::size( *(citDM->second) ) );
 
     int importCnt;
-    distributor.CreateFromSends( exportCnt, &(pList[0]), true, importCnt ); 
+    distributor.CreateFromSends( exportCnt, pList.data(), true, importCnt ); 
 
     double d_max_size = static_cast<double>(max_size);
     double d_max_all;
@@ -325,7 +325,7 @@ operator()( std::vector<int> const & pList,
       PackTraits<DT>::pack( *(citDM->second), &(exports_[0]), (max_all*exportCnt ), pos, comm_ );
     }
 
-    distributor.Do( &(exports_[0]), max_all, importSize_, imports_ );
+    distributor.Do( exports_.data(), max_all, importSize_, imports_ );
 
     oData.clear();
     KT key;
