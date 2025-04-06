@@ -595,7 +595,7 @@ bool Param::getImmutableValue<bool>() const
 template<>
 double Param::getMutableValue<double>() const
 {
-  double val;
+  double val=0.0;
 
   if (data_->enumType() != DBLE)
   {
