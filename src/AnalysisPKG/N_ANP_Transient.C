@@ -1680,8 +1680,9 @@ bool Transient::processSuccessfulDCOP()
 
   if (sensFlag_ && !firstDoubleDCOPStep() && solveDirectSensitivityFlag_)
   {
+    double dcopTime=0.0;
     nonlinearManager_.calcSensitivity(objectiveVec_, dOdpVec_, dOdpAdjVec_, 
-        scaled_dOdpVec_, scaled_dOdpAdjVec_);
+        scaled_dOdpVec_, scaled_dOdpAdjVec_, dcopTime);
   }
 
   if (sensFlag_ && solveAdjointSensitivityFlag_)
@@ -1833,8 +1834,9 @@ bool Transient::doProcessSuccessfulStep()
 
   if (sensFlag_ && solveDirectSensitivityFlag_)
   {
+    double nextTime = analysisManager_.getStepErrorControl().nextTime;
     nonlinearManager_.calcSensitivity(objectiveVec_,
-                                      dOdpVec_, dOdpAdjVec_, scaled_dOdpVec_, scaled_dOdpAdjVec_);
+                                      dOdpVec_, dOdpAdjVec_, scaled_dOdpVec_, scaled_dOdpAdjVec_, nextTime);
   }
 
   if (sensFlag_ && solveAdjointSensitivityFlag_)
@@ -2823,6 +2825,11 @@ bool Transient::doFinish()
     // a machine where all processors have I/O capability, as devices are
     // local to a processor.
     loader_.finishOutput();
+
+    if (sensFlag_ && solveDirectSensitivityFlag_)
+    {
+      nonlinearManager_.finalSensOutput ();
+    }
 
     finalVerboseOutput();
   }
