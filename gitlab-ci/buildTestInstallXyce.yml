@@ -61,6 +61,7 @@ include:
     paths:
       - logFiles
     expire_in: 1 day
+    when: always
   rules:
     - if: $DO_XYCE_BUILDS == "ON" && $CI_PIPELINE_SOURCE == "trigger"
   
