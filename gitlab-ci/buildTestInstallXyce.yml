@@ -56,7 +56,7 @@ include:
         -S ${CI_PROJECT_DIR}/cmake/ctest/xyce-ctest.cmake 2>&1 | tee ${CI_PROJECT_DIR}/logFiles/xyce-ctest-log.txt
     # clean out the installation directory
     - cleanInstallDir "${xyceInstallDir}"
-    - cmake --install ${CI_PROJECT_DIR}/repos/build
+    - cmake --install ${CI_PROJECT_DIR}/repos/build --config ${cmakeBuildType}
   artifacts:
     paths:
       - logFiles
@@ -125,7 +125,7 @@ Intel_OpenMPI.buildTestInstallXyce:
         ${CI_PROJECT_DIR}/gitlab-ci/cts-sbatch-ctest.sh "${rawCmakeArgsList}" "${xyceInstallDir}" "${CI_PROJECT_DIR}"
     # clean out the installation directory
     - cleanInstallDir "${xyceInstallDir}"
-    - cmake --install ${CI_PROJECT_DIR}/repos/build
+    - cmake --install ${CI_PROJECT_DIR}/repos/build --config ${cmakeBuildType}
 
 GNU_OpenMPI.cts.buildTestInstallXyce:
   extends:
