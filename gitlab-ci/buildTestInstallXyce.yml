@@ -60,6 +60,7 @@ include:
   artifacts:
     paths:
       - logFiles
+      - repos/build
     expire_in: 1 day
     when: always
   rules:
