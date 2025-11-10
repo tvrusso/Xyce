@@ -449,7 +449,7 @@ foreach(cmakeopt IN LISTS CMAKE_ARGS_LIST)
 
   # find out the build type requested
   # Look for the pattern “-DCMAKE_BUILD_TYPE=…”
-  string(FIND "${CMD_LINE}" "-DCMAKE_BUILD_TYPE=" _pos)
+  string(FIND "${cmakeopt}" "-DCMAKE_BUILD_TYPE=" _pos)
   if(_pos GREATER -1)
     # Extract everything after “-DCMAKE_BUILD_TYPE=”
     string(LENGTH "-DCMAKE_BUILD_TYPE=" _key_len)
