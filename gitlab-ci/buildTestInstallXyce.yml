@@ -50,7 +50,7 @@ include:
     - echo "Trilinos_DIR=${Trilinos_DIR}"
     # note use of the use of the pipeline's xyce-ctest.cmake file, NOT
     # the build repos copy
-    - ctest --timeout 600 -DVERBOSITY=5
+    - ctest --timeout 600 -DVERBOSITY=5 -C ${cmakeBuildType}
         -DUSE_GITLAB_CI_TESTING=ON
         -DCMAKE_ARGS_LIST="${rawCmakeArgsList}"
         -S ${CI_PROJECT_DIR}/cmake/ctest/xyce-ctest.cmake 2>&1 | tee ${CI_PROJECT_DIR}/logFiles/xyce-ctest-log.txt

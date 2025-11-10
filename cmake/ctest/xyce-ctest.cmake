@@ -445,31 +445,9 @@ if(VERBOSITY GREATER 4)
 endif()
 
 # default to a "Debug" build if not specified
-set(CMAKE_BUILD_TYPE_VALUE Debug) 
 set(XYCE_CMAKE_CONF_ARG "")
 foreach(cmakeopt IN LISTS CMAKE_ARGS_LIST)
   set(XYCE_CMAKE_CONF_ARG "${XYCE_CMAKE_CONF_ARG} ${cmakeopt}")
-
-  # find out the build type requested
-  # Look for the pattern “-DCMAKE_BUILD_TYPE=…”
-  string(FIND "${cmakeopt}" "-DCMAKE_BUILD_TYPE=" _pos)
-  if(_pos GREATER -1)
-    # Extract everything after “-DCMAKE_BUILD_TYPE=”
-    string(LENGTH "-DCMAKE_BUILD_TYPE=" _key_len)
-    math(EXPR _value_start "${_pos} + ${_key_len}")
-
-    # Find the next space (or end of string) to know where the value ends
-    string(FIND "${CMD_LINE}" " " _space_pos ${_value_start})
-    if(_space_pos EQUAL -1)               # No following space → value goes to end
-      set(_space_pos ${CMD_LINE_LENGTH})
-    endif()
-
-    # Slice out the value
-    string(SUBSTRING "${CMD_LINE}" ${_value_start} 
-      ${_space_pos-${_value_start}} CMAKE_BUILD_TYPE_VALUE)
-
-    message(STATUS "Detected CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE_VALUE}")
-  endif()
 endforeach()
 if(VERBOSITY GREATER 4)
   message("[VERB5]: XYCE_CMAKE_CONF_ARG = ${XYCE_CMAKE_CONF_ARG}")
@@ -510,8 +488,7 @@ ctest_start(${MODEL} GROUP ${TESTGROUP})
 ctest_configure(RETURN_VALUE confReturnVal)
 
 # this runs make
-ctest_build(CONFIGURATION ${CMAKE_BUILD_TYPE_VALUE}
-  RETURN_VALUE buildReturnVal)
+ctest_build(RETURN_VALUE buildReturnVal)
 
 # if the build succeeds, as indicated by a zero return value, proceed,
 # otherwise skip to submission
