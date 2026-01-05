@@ -4,6 +4,9 @@ include:
 .build_test_install_xyce:
   extends: .build_base
   stage: buildTestInstallXyce
+  id_tokens:
+    CI_JOB_JWT:
+      aud: https://cee-gitlab.sandia.gov
   dependencies: []
   variables:
     GoogleUnitTesting: "OFF"
@@ -19,8 +22,6 @@ include:
     cmakeArgsList: |
       --log-level=STATUS;\
       -DXyce_REGRESSION=ON;\
-      -DFLEX_ROOT=/projects/xyce/flexbison;\
-      -DBISON_ROOT=/projects/xyce/flexbison;\
       -DXyce_USE_FFT=ON;\
       -DXyce_PLUGIN_SUPPORT=ON;\
       -DBUILD_SHARED_LIBS=ON;\
