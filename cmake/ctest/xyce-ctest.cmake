@@ -16,9 +16,9 @@
 #   -DTDEV_BUILD=<TRUE|FALSE>
 #   -DUSE_CPACK_INSTALLER=<TRUE|FALSE>
 #   -DUSE_CMAKE_PATH=</path/to/copy/of/cmake/to/use>
-#   -DPROJECT_SANITIZER_SELECTION="address"
+#   -DBUILD_WITH_SANITIZERS=<TRUE|FALSE>
 
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.26)
 
 # DEPRECATED: You shouldn't be making changes or updating things in
 # here unless absolutely necessary. We are moving to a ctest-based
@@ -389,11 +389,19 @@ endif()
 set(CTEST_BUILD_NAME "$ENV{MYBUILDNAME}")
 
 # the "-DNUM_PROCS=N" is highest priority, followed by the environment
-# variable NUM_PROCS and finally use 8 as the default if it's not
-# specified
+# variable NUM_PROCS and finally try to get the count of physical cores
+# on the current platform and use that. If that fails use a default value.
 if(NOT DEFINED NUM_PROCS)
   if(NOT DEFINED ENV{NUM_PROCS})
-    set(NUM_PROCS 8)
+    # try to determine the number of physical cores if the user
+    # didn't specify a value
+    cmake_host_system_information(RESULT physCoreCount QUERY NUMBER_OF_PHYSICAL_CORES)
+    if (physCoreCount)
+      set(NUM_PROCS ${physCoreCount})
+    else()
+      # default if all else fails
+      set(NUM_PROCS 8)
+    endif()
   else()
     set(NUM_PROCS $ENV{NUM_PROCS})
   endif()
@@ -483,30 +491,36 @@ set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} -DBUILD_TESTING=${BUILD_
 set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} ${CTEST_SOURCE_DIRECTORY}")
 
 # ASAN
-if(NOT PROJECT_SANITIZER_SELECTION)
-  set(BUILD_WITH_SANITIZERS OFF)
-else()
-  if(PROJECT_SANITIZER_SELECTION STREQUAL "address")
-    include(${CMAKE_CURRENT_LIST_DIR}/../sanitizers.cmake)
-    setup_sanitizer_interface(ON)
+if(BUILD_WITH_SANITIZERS)
+  include(${CMAKE_CURRENT_LIST_DIR}/../sanitizers.cmake)
+  setup_sanitizer_interface(NOT_FOR_INTERFACE)
+  set(ENV{ASAN_OPTIONS} ${XYCE_ASAN_OPTIONS})
+  set(ENV{LSAN_OPTIONS} ${XYCE_LSAN_OPTIONS})
+  set(ENV{UBSAN_OPTIONS} ${XYCE_UBSAN_OPTIONS})
+  set(CTEST_CONFIGURE_COMMAND  "${CTEST_CONFIGURE_COMMAND} -DBUILD_WITH_SANITIZERS=ON")
 
-    set(BUILD_WITH_SANITIZERS ON)
-
-    # this doesn't seem to work. There's a complaint during run about
-    # not being able to parse the suppressions file. Instead we're
-    # relying on setting it via an environment variable property set
-    # for each test. I suspect the reason for the failure is that it's
-    # passing an LSAN suppressions file in as the ASAN suppresions
-    # file. This is a consequence of building executables with all
-    # sanitization on instead of just address sanitization.
-    ###    set(CTEST_MEMORYCHECK_SUPPRESSIONS_FILE "'${LSAN_BLACKLIST_PATH}'")
-    set(CTEST_MEMORYCHECK_TYPE "AddressSanitizer")
-    set(CTEST_MEMORYCHECK_SANITIZER_OPTIONS "${ASAN_OPTIONS}")
-    
-    set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} -DBUILD_WITH_SANITIZERS=ON")
-    set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} -DPROJECT_SANITIZER_SELECTION=${PROJECT_SANITIZER_SELECTION}")
-  else()
-    message(FATAL_ERROR "Unknown sanitizer selection \"${PROJECT_SANITIZER_SELECTION}\"")
+  # check for symbolizer(s). if found this will add line-number information
+  # to the stack traces output by the sanitizer.
+  find_program(MY_SYMBOLIZER llvm-symbolizer)
+  if(NOT MY_SYMBOLIZER)
+    find_program(MY_SYBMOLIZER addr2line)
+  endif()
+  if(NOT MY_SYMBOLIZER)
+    message("Unable to find symbolizer. Sanitizer output will not include line-number information")
+  endif()
+  
+  if(MY_SYMBOLIZER)
+    message("Found sanitizer symbolizer: ${MY_SYMBOLIZER}")
+    set(ENV{ASAN_SYMBOLIZER_PATH} "${MY_SYMBOLIZER}")
+    set(ENV{LSAN_SYMBOLIZER_PATH} "${MY_SYMBOLIZER}")
+    set(ENV{UBSAN_SYMBOLIZER_PATH} "${MY_SYMBOLIZER}")
+  endif()
+  if(VERBOSITY GREATER 1)
+    message("[VERB1]: Sanitizer options:")
+    message("   ASAN_OPTIONS = $ENV{ASAN_OPTIONS}")
+    message("   LSAN_OPTIONS = $ENV{LSAN_OPTIONS}")
+    message("   UBSAN_OPTIONS = $ENV{UBSAN_OPTIONS}")
+    message("   Symbolizer = ${MY_SYMBOLIZER}")
   endif()
 endif()
 
@@ -522,7 +536,7 @@ ctest_start(${MODEL} GROUP ${TESTGROUP})
 # this runs cmake on xyce
 ctest_configure(RETURN_VALUE confReturnVal)
 
-# this runs make
+# invoke the build tool, usually ninja, or possibly "make"
 ctest_build(RETURN_VALUE buildReturnVal)
 
 # if the build succeeds, as indicated by a zero return value, proceed,
@@ -534,15 +548,9 @@ if(buildReturnVal EQUAL 0)
       message("[VERB1]: PARALLEL_LEVEL being set to ${NUM_PROCS} and label ${XYCE_TEST_LABEL_FILTER}")
     endif()
     set( ENV{XYCE_NO_TRACKING} "notrack")
-    if(BUILD_WITH_SANITIZERS)
-      ctest_memcheck(RETURN_VALUE testReturnVal 
-        PARALLEL_LEVEL ${NUM_PROCS}
-        INCLUDE_LABEL ${XYCE_TEST_LABEL_FILTER})
-    else()
-      ctest_test(RETURN_VALUE testReturnVal
-        PARALLEL_LEVEL ${NUM_PROCS}
-        INCLUDE_LABEL ${XYCE_TEST_LABEL_FILTER})
-    endif()
+    ctest_test(RETURN_VALUE testReturnVal
+      PARALLEL_LEVEL ${NUM_PROCS}
+      INCLUDE_LABEL ${XYCE_TEST_LABEL_FILTER})
     if(VERBOSITY GREATER 1)
       message("[VERB1]: ctest_test() exited with return value: ${testReturnVal}")
     endif()
