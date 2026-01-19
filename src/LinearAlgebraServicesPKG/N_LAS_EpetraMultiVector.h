@@ -159,7 +159,7 @@ public:
   // Index operator
   double * operator() (int row_lid, int col_lid)
   {
-    if (row_lid >= 0 && col_lid >= 0)
+    if (oMultiVector_->MyLength() && (row_lid >= 0 && col_lid >= 0))
       return ((*oMultiVector_)[col_lid]+row_lid);
     else
       return &groundNode_;
@@ -168,7 +168,7 @@ public:
   // Index operator
   const double * operator() (int row_lid, int col_lid) const
   {
-    if (row_lid >= 0 && col_lid >= 0)
+    if (oMultiVector_->MyLength() && (row_lid >= 0 && col_lid >= 0))
       return ((*oMultiVector_)[col_lid]+row_lid);
     else
       return &groundNode_;

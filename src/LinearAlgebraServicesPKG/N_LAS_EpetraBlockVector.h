@@ -265,7 +265,7 @@ class EpetraBlockVector : public BlockVector, public EpetraVectorAccess
 // Index operator
 inline double * EpetraBlockVector::operator() (int row_lid, int col_lid)
 {
-  if (row_lid >= 0 && col_lid >= 0)
+  if (aMultiVector_->MyLength() && (row_lid >= 0 && col_lid >= 0))
     return (*aMultiVector_)[col_lid]+row_lid;
   else
     return &groundNode_;
@@ -274,7 +274,7 @@ inline double * EpetraBlockVector::operator() (int row_lid, int col_lid)
 // Index operator
 inline const double * EpetraBlockVector::operator() (int row_lid, int col_lid) const
 {
-  if (row_lid >= 0 && col_lid >= 0)
+  if (aMultiVector_->MyLength() && (row_lid >= 0 && col_lid >= 0))
     return (*aMultiVector_)[col_lid]+row_lid;
   else
     return &groundNode_;

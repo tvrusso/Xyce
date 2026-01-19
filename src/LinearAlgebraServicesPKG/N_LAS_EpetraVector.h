@@ -164,7 +164,7 @@ public:
   // Index operator
   double * operator() (int row_lid, int col_lid)
   {
-    if (row_lid >= 0 && col_lid >= 0)
+    if (epetraOverlapObj().MyLength() && (row_lid >= 0 && col_lid >= 0))
       return (epetraOverlapObj()[col_lid]+row_lid);
     else
       return &groundNode_;
@@ -173,7 +173,7 @@ public:
   // Index operator
   const double * operator() (int row_lid, int col_lid) const
   {
-    if (row_lid >= 0 && col_lid >= 0)
+    if (oMultiVector_->MyLength() && (row_lid >= 0 && col_lid >= 0))
       return ((*oMultiVector_)[col_lid]+row_lid);
     else
       return &groundNode_;
@@ -182,7 +182,7 @@ public:
   // Operation: operator []
   virtual double & operator[] (int index)
   {
-    if (index >= 0)
+    if (oMultiVector_->MyLength() && (index >= 0))
       return (*oMultiVector_)[0][index];
     else
       return groundNode_;
@@ -191,7 +191,7 @@ public:
   // Operation: operator []
   virtual const double & operator[] (int index) const
   {
-    if (index >= 0)
+    if (oMultiVector_->MyLength() && (index >= 0))
       return (*oMultiVector_)[0][index];
     else
       return groundNode_;
