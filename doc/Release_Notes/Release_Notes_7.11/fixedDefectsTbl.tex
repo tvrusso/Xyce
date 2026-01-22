@@ -72,6 +72,10 @@
        constant at compile time.  This has been fixed to remove the warning on non-Clang compilers.
   \\\hline
 
+\textbf{Xyce Project Backlog/1030}: Fix error in Analysis::Mode enum
+  &  The output manager was extending the Analysis::Mode enum for its own signaling for output
+     generation.  This was flagged as an error by a sanitizer build of Xyce.  The issue has been fixed.
+  \\\hline
 \textbf{Xyce Project Backlog/xxx}: Description
   &  Details
   \\\hline
