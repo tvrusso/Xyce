@@ -1001,8 +1001,8 @@ bool Instance::updateIntermediateVars ()
   {
     Xyce::dout() << "Instance::updateIntermediateVars" << std::endl;
   }
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
-  Linear::Vector & staVector = *(extData.nextStaVectorPtr);
+  double * solVector = extData.nextSolVectorRawPtr;
+  double * staVector = extData.nextStaVectorRawPtr;
 
   // some parameters in the model class that we will use often
   const double A      = model_.A;
@@ -1168,7 +1168,7 @@ bool Instance::updateIntermediateVars ()
 
   }
   
-  Linear::Vector & stoVector = *(extData.nextStoVectorPtr);
+  double * stoVector = extData.nextStoVectorRawPtr;
   stoVector[li_MagVarStore] = latestMag; 
   stoVector[ li_HVarStore ] = model_.HCgsFactor * (Happ  - (model_.Gap / model_.Path) * latestMag);
   stoVector[ li_BVarStore ] = model_.BCgsFactor * (4.0e-7 * M_PI * (stoVector[ li_HVarStore ] + latestMag));
@@ -1271,12 +1271,12 @@ bool Instance::updateSecondaryState ()
          << "\tname = " << getName() << std::endl;
   }
 
-  Linear::Vector & staVector = *(extData.nextStaVectorPtr);
-  Linear::Vector & staDerivVec = *(extData.nextStaDerivVectorPtr);
+  double * staVector = extData.nextStaVectorRawPtr;
+  double * staDerivVec = extData.nextStaDerivVectorRawPtr;
     
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
-  Linear::Vector & stoVector = *(extData.nextStoVectorPtr);
-  Linear::Vector & stoVectorCurr = *(extData.currStoVectorPtr);
+  double * solVector = extData.nextSolVectorRawPtr;
+  double * stoVector = extData.nextStoVectorRawPtr;
+  double * stoVectorCurr = extData.currStoVectorRawPtr;
   
   //double mVarScaling = model_.mVarScaling;
   // place current values of mag, H and R in state vector
@@ -1393,10 +1393,10 @@ void Instance::acceptStep()
       PFunctionHistory[2] = PPreviousStep;
     }
     oldBranchCurrentSum = branchCurrentSum;
-    Linear::Vector & staDerivVec = *(extData.nextStaDerivVectorPtr);
+    double * staDerivVec = extData.nextStaDerivVectorRawPtr;
     dMdtHistory_.push_back( staDerivVec[ li_MagVarState ] );
 
-    Linear::Vector & stoVector = *(extData.nextStoVectorPtr);
+    double * stoVector = extData.nextStoVectorRawPtr;
 
     // update average magnetic gradient.
     for( int j=0; j< dMdtHistory_.get_size(); j++)
@@ -1433,7 +1433,7 @@ bool Instance::loadDAEQVector ()
   }
 
   Linear::Vector * daeQVecPtr = extData.daeQVectorPtr;
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
+  double * solVector = extData.nextSolVectorRawPtr;
 
   // update LOI -- the following product
   // I = column vector of currents
@@ -1513,7 +1513,7 @@ bool Instance::loadDAEFVector ()
   }
 
   Linear::Vector * daeFVecPtr = extData.daeFVectorPtr;
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
+  double * solVector = extData.nextSolVectorRawPtr;
 
   double Gap = model_.Gap;
   double Path = model_.Path;
@@ -1628,8 +1628,8 @@ bool Instance::loadDAEdFdx ()
          << "\tname = " << getName() << std::endl;
   }
 
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
-  Linear::Vector & lastSolVector = *(extData.lastSolVectorPtr);
+  double * solVector = extData.nextSolVectorRawPtr;
+  double * lastSolVector = extData.lastSolVectorRawPtr;
   Linear::Matrix * dFdxMatPtr = extData.dFdxMatrixPtr;
 
   // pull these parameters up from the model class to make it easier

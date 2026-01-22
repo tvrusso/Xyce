@@ -460,8 +460,8 @@ bool Instance::getInstanceBreakPoints ( std::vector<Util::BreakPoint> & breakPoi
   double * solVector = extData.nextSolVectorRawPtr;
   
   // reference to the stoVector.  Needed if we update the state
-  Linear::Vector & stoVector = *(extData.nextStoVectorPtr);
-
+  double * stoVector = extData.nextStoVectorRawPtr;
+  
   vPos = solVector[li_Pos];
   vNeg = solVector[li_Neg];
 
