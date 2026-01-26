@@ -75,7 +75,7 @@ class EpetraBlockMultiVector : public BlockMultiVector, public EpetraVectorAcces
   // Index operator
   double * operator() (int row_lid, int col_lid)
   {
-    if (row_lid >= 0 && col_lid >= 0)
+    if (aMultiVector_->MyLength() && (row_lid >= 0 && col_lid >= 0))
       return ((*aMultiVector_)[col_lid]+row_lid);
     else
       return &groundNode_;
@@ -84,7 +84,7 @@ class EpetraBlockMultiVector : public BlockMultiVector, public EpetraVectorAcces
   // Index operator
   const double * operator() (int row_lid, int col_lid) const
   {
-    if (row_lid >= 0 && col_lid >= 0)
+    if (aMultiVector_->MyLength() && (row_lid >= 0 && col_lid >= 0))
       return ((*aMultiVector_)[col_lid]+row_lid);
     else
       return &groundNode_;

@@ -2150,15 +2150,10 @@ void AnalysisManager::OutputDiagnosticInfo(const AnalysisEvent & analysis_event)
     {
       const int numProc = pdsComm.numProc();
       int thisProc = pdsComm.procID();
-      int stringLenPerProcPreCom[ numProc ];
-      int stringLenPerProc[ numProc ];
-      for( int p=0; p<numProc; p++) 
-      {
-        stringLenPerProcPreCom[p] = 0;
-        stringLenPerProc[p] = 0;
-      }
+      std::vector<int> stringLenPerProcPreCom( numProc, 0 );
+      std::vector<int> stringLenPerProc( numProc, 0 );
       stringLenPerProcPreCom[thisProc] = viOutput.length();
-      pdsComm.maxAll(stringLenPerProcPreCom, stringLenPerProc, numProc);
+      pdsComm.maxAll(stringLenPerProcPreCom.data(), stringLenPerProc.data(), numProc);
     
       // now we know the length of a diagnostic message on each processor.  So, accumulate them   
       for( int p=0; p<numProc; p++) 
@@ -2257,15 +2252,10 @@ void AnalysisManager::OutputDiagnosticInfo(const AnalysisEvent & analysis_event)
     {
       const int numProc = pdsComm.numProc();
       int thisProc = pdsComm.procID();
-      int stringLenPerProcPreCom[ numProc ];
-      int stringLenPerProc[ numProc ];
-      for( int p=0; p<numProc; p++) 
-      {
-        stringLenPerProcPreCom[p] = 0;
-        stringLenPerProc[p] = 0;
-      }
+      std::vector<int> stringLenPerProcPreCom( numProc, 0 );
+      std::vector<int> stringLenPerProc( numProc, 0 );
       stringLenPerProcPreCom[thisProc] = discStringOutput.length();
-      pdsComm.maxAll(stringLenPerProcPreCom, stringLenPerProc, numProc);
+      pdsComm.maxAll(stringLenPerProcPreCom.data(), stringLenPerProc.data(), numProc);
     
       // now we know the length of a diagnostic message on each processor.  So, accumulate them   
       for( int p=0; p<numProc; p++) 

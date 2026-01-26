@@ -876,11 +876,11 @@ bool Instance::updatePrimaryState ()
   double transitionTime;
   bool changeState = false; //Genie 110812
   bool clocking = false; //Genie 111212
-
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
-  Linear::Vector & staVector = *(extData.nextStaVectorPtr);
-  Linear::Vector & oldStaVector = *(extData.currStaVectorPtr);
-  Linear::Vector & oldSolVector = *(extData.currSolVectorPtr);
+  
+  double * solVector = extData.nextSolVectorRawPtr;
+  double * staVector = extData.nextStaVectorRawPtr;
+  double * oldStaVector = extData.currStaVectorRawPtr;
+  double * oldSolVector = extData.currSolVectorRawPtr;
   
   // added so that the oldState vector can be passed into gateInfo_->evaluateTruthTable()
   std::vector<bool> oldState;

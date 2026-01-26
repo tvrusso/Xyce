@@ -579,13 +579,13 @@ void OutputMgr::earlyPrepareOutput(
     // RAW output.
     if (enableHomotopyFlag_)
     {
-      if (!testAndSet(enabledAnalysisSet_, (Analysis::Mode) (Analysis::ANP_MODE_INVALID + 100)))
+      if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_HOMOTOPY))
         Outputter::enableHomotopyOutput(comm, *this, analysis_mode);
     }
 
     if (enableSensitivityFlag_)
     {
-      if (!testAndSet(enabledAnalysisSet_, (Analysis::Mode) (Analysis::ANP_MODE_INVALID + 101)))
+      if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_SENSITIVITY_AC))
       {
         if (analysis_mode == Analysis::ANP_MODE_AC)
           Outputter::enableSensitivityACOutput(comm, *this, analysis_mode);
@@ -597,7 +597,7 @@ void OutputMgr::earlyPrepareOutput(
       // Need to re-think the INVALID+102 thing.
       if ( adjointSensitivityFlag_ )
       {
-        if (!testAndSet(enabledAnalysisSet_, (Analysis::Mode) (Analysis::ANP_MODE_INVALID + 102)))
+        if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_ADJOINT_SENSITIVITY))
           Outputter::enableAdjointSensitivityOutput(comm, *this, analysis_mode);
 
         // ERK.  NOT putting the transient adjoint outputters on the stack.  
@@ -608,7 +608,7 @@ void OutputMgr::earlyPrepareOutput(
   }
   else if (enableEmbeddedSamplingFlag_)
   {
-    if (!testAndSet(enabledAnalysisSet_, (Analysis::Mode) (Analysis::ANP_MODE_INVALID + 103)))
+    if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_EMBEDDED_SAMPLING))
       Outputter::enableEmbeddedSamplingOutput(comm, *this, analysis_mode);
 
     if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_TRANSIENT))
@@ -619,7 +619,7 @@ void OutputMgr::earlyPrepareOutput(
   }
   else if (enablePCEFlag_)
   {
-    if (!testAndSet(enabledAnalysisSet_, (Analysis::Mode) (Analysis::ANP_MODE_INVALID + 104)))
+    if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_PCE))
       Outputter::enablePCEOutput(comm, *this, analysis_mode);
 
     if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_TRANSIENT))
@@ -677,7 +677,7 @@ void OutputMgr::earlyPrepareOutput(
 
     if (enableHomotopyFlag_)
     {
-      if (!testAndSet(enabledAnalysisSet_, (Analysis::Mode) (Analysis::ANP_MODE_INVALID + 100)))
+      if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_HOMOTOPY))
         Outputter::enableHomotopyOutput(comm, *this, analysis_mode);
     }
 
@@ -693,7 +693,7 @@ void OutputMgr::earlyPrepareOutput(
         enableDeviceSensitivityOutput();  sensDeviceSetup=true; 
       }
 
-      if (!testAndSet(enabledAnalysisSet_, (Analysis::Mode) (Analysis::ANP_MODE_INVALID + 101)))
+      if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_SENSITIVITY_AC))
       {
         if (analysis_mode == Analysis::ANP_MODE_AC)
           Outputter::enableSensitivityACOutput(comm, *this, analysis_mode);
@@ -705,7 +705,7 @@ void OutputMgr::earlyPrepareOutput(
       // Need to re-think the INVALID+102 thing.
       if ( adjointSensitivityFlag_ )
       {
-        if (!testAndSet(enabledAnalysisSet_, (Analysis::Mode) (Analysis::ANP_MODE_INVALID + 102)))
+        if (!testAndSet(enabledAnalysisSet_, Analysis::ANP_MODE_ADJOINT_SENSITIVITY))
           Outputter::enableAdjointSensitivityOutput(comm, *this, analysis_mode);
 
         // ERK.  NOT putting the transient adjoint outputters on the stack.  

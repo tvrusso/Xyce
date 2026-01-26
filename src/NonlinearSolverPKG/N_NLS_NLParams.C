@@ -61,6 +61,7 @@ NLParams::NLParams(AnalysisMode mode, const IO::CmdParse & cp)
     commandLine_(&cp),
     analysisMode_(mode),
     modeToggled_(true),
+    linearOptimization_(false),
     debugLevel_(1),
     debugMinTimeStep_(0),
     debugMaxTimeStep_(Util::MachineDependentParams::IntMax()),

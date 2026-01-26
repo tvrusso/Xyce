@@ -56,6 +56,26 @@
   Fix runaway memory problem for radiation function types other than seven &  There was a bookkeeping error that caused memory usage to grow a small amount at every time step.  This has been fixed.
   \\\hline
 
+  \textbf{Xyce Project Backlog/1029}: Uninitialized member variable caused error in sanitizer build
+    &  An uninitialized variable in NLParams caused errors in a sanitizer build of Xyce when the uninitialized
+    variable was used in a copy or assignment constructor.  This issue did not cause errors in Xyce's operation 
+    but it was technically incorrect.  It has been fixed. 
+  \\\hline
+ 
+  \textbf{Xyce Project Backlog/1025}:
+    &  Numerous places in Xyce are returning the underlying data pointer to the 0-th entry of an empty (multi)vector.
+       This did not cause errors in Xyce's operation, but is not safe, so it has been fixed.
+  \\\hline
+
+  \textbf{Xyce Project Backlog/1028}:
+    &  An integer array is being generated in the analysis manager using a number that is not
+       constant at compile time.  This has been fixed to remove the warning on non-Clang compilers.
+  \\\hline
+
+\textbf{Xyce Project Backlog/1030}: Fix error in Analysis::Mode enum
+  &  The output manager was extending the Analysis::Mode enum for its own signaling for output
+     generation.  This was flagged as an error by a sanitizer build of Xyce.  The issue has been fixed.
+  \\\hline
 \textbf{Xyce Project Backlog/xxx}: Description
   &  Details
   \\\hline

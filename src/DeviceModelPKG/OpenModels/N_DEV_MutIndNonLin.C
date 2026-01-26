@@ -1030,8 +1030,8 @@ bool Instance::updateIntermediateVars ()
     Xyce::dout() << "Instance::updateIntermediateVars " << std::endl;
   }
 
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
-  Linear::Vector & staVector = *(extData.nextStaVectorPtr);
+  double * solVector = extData.nextSolVectorRawPtr;
+  double * staVector = extData.nextStaVectorRawPtr;
 
   // some parameters in the model class that we will use often
   const double A      = model_.A;
@@ -1058,7 +1058,7 @@ bool Instance::updateIntermediateVars ()
 
   // only update maxVoltageDrop when system has converged or we may
   // get wildly wrong values.
-  Linear::Vector & lastSolVector = *(extData.currSolVectorPtr);
+  double * lastSolVector = extData.currSolVectorRawPtr;
   double lastVoltageDrop = lastSolVector[(instanceData[0])->li_Pos] - lastSolVector[(instanceData[0])->li_Neg];
   if ( (getSolverState().newtonIter == 0) && (fabs(lastVoltageDrop) > maxVoltageDrop) )
   {
@@ -1394,9 +1394,9 @@ bool Instance::updatePrimaryState ()
 
   updateIntermediateVars ();
 
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
-  Linear::Vector & staVector = *(extData.nextStaVectorPtr);
-  Linear::Vector & stoVector = *(extData.nextStoVectorPtr);
+  double * solVector = extData.nextSolVectorRawPtr;
+  double * staVector = extData.nextStaVectorRawPtr;
+  double * stoVector = extData.nextStoVectorRawPtr;
   double mVarScaling = model_.mVarScaling;
 
   // place current values of mag, H and R in state vector
@@ -1428,12 +1428,12 @@ bool Instance::updateSecondaryState ()
          << "\tname = " << getName() << std::endl;
   }
 
-  Linear::Vector & staVector = *(extData.nextStaVectorPtr);
-  Linear::Vector & staDerivVec = *(extData.nextStaDerivVectorPtr);
+  double * staVector = extData.nextStaVectorRawPtr;
+  double * staDerivVec = extData.nextStaDerivVectorRawPtr;
   
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
-  Linear::Vector & stoVector = *(extData.nextStoVectorPtr);
-  Linear::Vector & stoVectorCurr = *(extData.currStoVectorPtr);
+  double * solVector = extData.nextSolVectorRawPtr;
+  double * stoVector = extData.nextStoVectorRawPtr;
+  double * stoVectorCurr = extData.currStoVectorRawPtr;
 
   // copy derivitive of Mag from result vector into state vector
   staVector[ li_MagVarDerivState ] = staDerivVec[ li_MagVarState ];
@@ -1549,8 +1549,8 @@ bool Instance::loadDAEQVector ()
          << "\tname = " << getName() << std::endl;
   }
 
-  Linear::Vector & staVector = *(extData.nextStaVectorPtr);
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
+  double * staVector = extData.nextStaVectorRawPtr;
+  double * solVector = extData.nextSolVectorRawPtr;
   double * qVec = extData.daeQVectorRawPtr;
 
   // update LOI -- the following product
@@ -1647,9 +1647,9 @@ bool Instance::loadDAEFVector ()
          << "\tname = " << getName() << std::endl;
   }
 
-  Linear::Vector & staVector = *(extData.nextStaVectorPtr);
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
-  Linear::Vector & stoVector = *(extData.nextStoVectorPtr);
+  double * staVector = extData.nextStaVectorRawPtr;
+  double * solVector = extData.nextSolVectorRawPtr;
+  double * stoVector = extData.nextStoVectorRawPtr;
 
   double * fVec = extData.daeFVectorRawPtr;
 
@@ -1826,8 +1826,8 @@ bool Instance::loadDAEdFdx ()
          << "\tname = " << getName() << std::endl;
   }
 
-  Linear::Vector & solVector = *(extData.nextSolVectorPtr);
-  Linear::Vector & stoVector = *(extData.nextStoVectorPtr);
+  double * solVector = extData.nextSolVectorRawPtr;
+  double * stoVector = extData.nextStoVectorRawPtr;
   Linear::Matrix * dFdxMatPtr = extData.dFdxMatrixPtr;
 
   // udate dependent parameters
@@ -1978,8 +1978,8 @@ bool Instance::outputPlotFiles(bool force_final_output)
   bool bsuccess = true;
   if( outputStateVarsFlag && outputFileStreamPtr.get() && (*outputFileStreamPtr) )
   {
-    Linear::Vector & staVector = *(extData.nextStaVectorPtr);
-    Linear::Vector & stoVector = *(extData.nextStoVectorPtr);
+    double * staVector = extData.nextStaVectorRawPtr;
+    double * stoVector = extData.nextStoVectorRawPtr;
     double mVarScaling = model_.mVarScaling;
     double rVarScaling = model_.rVarScaling;
 
