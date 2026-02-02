@@ -76,6 +76,13 @@
   &  The output manager was extending the Analysis::Mode enum for its own signaling for output
      generation.  This was flagged as an error by a sanitizer build of Xyce.  The issue has been fixed.
   \\\hline
+  
+\textbf{Xyce Project Backlog/1031}: Fix potential null pointer binding to reference
+  &  A few devices were assigning a potentially null pointer to a reference.  This caused
+  an error in a sanitizer build of Xyce but was not causing an error in Xyce because the 
+  null pointers were never dereferenced.  It has been fixed.
+  \\\hline
+  
 \textbf{Xyce Project Backlog/xxx}: Description
   &  Details
   \\\hline
