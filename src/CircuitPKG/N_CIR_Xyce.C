@@ -1343,7 +1343,7 @@ Simulator::RunStatus Simulator::initializeLate()
   fourierManager_->fixupFourierParameters(comm_, *opBuilderManager_, analysisManager_->getFinalTime());
   fftManager_->enableFFTAnalysis(analysisManager_->getAnalysisMode());
   fftManager_->fixupFFTParameters(comm_, *outputManager_, *opBuilderManager_, analysisManager_->getFinalTime(),
-                                  analysisManager_->getStepErrorControl());
+                                  &(analysisManager_->getStepErrorControl()));
 
   // Make the measure operators, and then check for agreement between the 
   // measures' requested modes (e.g, TRAN) and the analysis type (e.g, .TRAN).

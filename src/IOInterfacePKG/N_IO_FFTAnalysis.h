@@ -81,7 +81,7 @@ public:
   void fixupFFTParameters(Parallel::Machine comm,
                           const Util::Op::BuilderManager &op_builder_manager,
                           double endSimTime,
-                          TimeIntg::StepErrorControl & sec,
+                          TimeIntg::StepErrorControl * sec,
                           bool fft_accurate,
                           bool fftout,
                           int fft_mode);

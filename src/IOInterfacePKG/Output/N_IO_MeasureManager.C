@@ -1063,7 +1063,7 @@ void Manager::remeasure(
     // StepErrorControl is not made by the AnalysisManager during -remeasure
     TimeIntg::StepErrorControl* sec(NULL);
     fft_manager.fixupFFTParametersForRemeasure(pds_comm.comm(), op_builder_manager,
-				   analysis_manager.getFinalTimeForRemeasure(), *sec);
+				   analysis_manager.getFinalTimeForRemeasure(), sec);
     fixupFFTMeasures(pds_comm.comm(), fft_manager);
   }
 

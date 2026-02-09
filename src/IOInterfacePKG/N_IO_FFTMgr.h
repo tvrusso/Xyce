@@ -92,11 +92,11 @@ public:
                           const IO::OutputMgr &output_manager,
                           const Util::Op::BuilderManager &op_builder_manager,
 			  double endSimTime,
-                          TimeIntg::StepErrorControl & sec);
+                          TimeIntg::StepErrorControl * sec);
   void fixupFFTParametersForRemeasure(Parallel::Machine comm,
                           const Util::Op::BuilderManager &op_builder_manager,
 			  double endSimTime,
-                          TimeIntg::StepErrorControl & sec);
+                          TimeIntg::StepErrorControl * sec);
 
   void resetFFTAnalyses();
 

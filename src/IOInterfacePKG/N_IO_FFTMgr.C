@@ -166,7 +166,7 @@ void FFTMgr::fixupFFTParameters(
   const IO::OutputMgr &output_manager,
   const Util::Op::BuilderManager &op_builder_manager,
   double endSimTime,
-  TimeIntg::StepErrorControl & sec)
+  TimeIntg::StepErrorControl *sec)
 {
   if (fftAnalysisEnabled_)
   {
@@ -198,7 +198,7 @@ void FFTMgr::fixupFFTParametersForRemeasure(
   Parallel::Machine comm,
   const Util::Op::BuilderManager &op_builder_manager,
   double endSimTime,
-  TimeIntg::StepErrorControl & sec)
+  TimeIntg::StepErrorControl * sec)
 {
   if (fftAnalysisEnabled_)
   {
