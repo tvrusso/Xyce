@@ -82,6 +82,17 @@
   an error in a sanitizer build of Xyce but was not causing an error in Xyce because the 
   null pointers were never dereferenced.  It has been fixed.
   \\\hline
+
+\textbf{Xyce Project Backlog/1032}: Fix binding NULL pointer to reference 
+  &  During the remeasure process a null pointer for a step-error-control object was assigned to
+  a reference.  The step-error-control object is not needed for remeasure so this didn't effect
+  the code, but it is a poor construct.  The null reference has been corrected.
+  \\\hline  
+  
+\textbf{Xyce Project Backlog/1035}: Restart test fails in sanitizer build with NULL pointer binding
+  &  A restart test was using a NULL pointer in a memory copy operation.  It did not effect
+  normal restart operation but was incorrect.  This issue has been fixed.
+  \\\hline
   
 \textbf{Xyce Project Backlog/xxx}: Description
   &  Details
