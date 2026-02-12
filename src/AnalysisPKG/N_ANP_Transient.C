@@ -134,7 +134,7 @@ Transient::Transient(
     endTRANtime_(0.0),
     quiet_(analysisManager_.getCommandLine().argExists("-quiet")),
     maxTimeStepExpressionString_(),
-    maxTimeStepExpression_(0),
+    maxTimeStepExpression_(NULL),
     firstTime(true),
     oldPercentComplete(0.0),
     startSimTime(-1.0),
@@ -172,6 +172,17 @@ Transient::Transient(
     userBreakPointsGiven_(false),
     resetForStepCalledBefore_(false)
 {}
+
+Transient::~Transient()
+{
+  // delete expression for time step if it was allocated
+  if(maxTimeStepExpression_ != NULL)
+  {
+    delete maxTimeStepExpression_;
+    maxTimeStepExpression_ = NULL;
+  }
+
+}
 
 //-----------------------------------------------------------------------------
 // Function      : Transient::notify
