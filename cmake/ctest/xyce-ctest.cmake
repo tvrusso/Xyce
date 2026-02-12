@@ -17,6 +17,7 @@
 #   -DUSE_CPACK_INSTALLER=<TRUE|FALSE>
 #   -DUSE_CMAKE_PATH=</path/to/copy/of/cmake/to/use>
 #   -DBUILD_WITH_SANITIZERS=<TRUE|FALSE>
+#   -DCOVERAGE=<TRUE|FALSE>
 
 cmake_minimum_required(VERSION 3.26)
 
@@ -300,6 +301,10 @@ if(NOT DEFINED USE_CMAKE_PATH)
   set(USE_CMAKE_PATH FALSE)
 endif()
 
+if (NOT DEFINED COVERAGE)
+  SET(COVERAGE FALSE)
+endif()
+
 # error check
 if(NOT DEFINED ENV{MYBUILDNAME})
   message(FATAL_ERROR "ERROR: Required environment varialble \"MYBUILDNAME\" not set")
@@ -343,9 +348,9 @@ execute_process(COMMAND "${HNAME}"
   OUTPUT_VARIABLE HOST_NAME
   OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-if(${HOST_NAME} MATCHES "^ascic[0-9]*")
+if("${HOST_NAME}" MATCHES "^ascic[0-9]*")
   set(CTEST_SITE "ascic")
-elseif(${HOST_NAME} MATCHES "cee-build[0-9]*")
+elseif("${HOST_NAME}" MATCHES "cee-build[0-9]*")
   set(CTEST_SITE "cee-build")
 else()
   set(CTEST_SITE ${HOST_NAME})
@@ -354,7 +359,7 @@ endif()
 if(VERBOSITY GREATER 4)
   message("[VERB5]: ENV{SNLSYSTEM} = $ENV{SNLSYSTEM}")
 endif()
-if($ENV{SNLSYSTEM} MATCHES "^cts*")
+if("$ENV{SNLSYSTEM}" MATCHES "^cts*")
   set(CTEST_SITE "cts")
 endif()
 
@@ -422,11 +427,11 @@ if(USE_GITLAB_CI_TESTING)
   endif()
   set(XYCE_TEST_LABEL_FILTER "nightly")
 else()
-  if($ENV{TESTSET} STREQUAL "Nightly")
+  if("$ENV{TESTSET}" STREQUAL "Nightly")
     set(MODEL "Nightly")
     set(TESTGROUP "Nightly")
     set(XYCE_TEST_LABEL_FILTER "nightly")
-  elseif($ENV{TESTSET} STREQUAL "Weekly")
+  elseif("$ENV{TESTSET}" STREQUAL "Weekly")
     set(MODEL "Nightly")
     set(TESTGROUP "Latest_Weekly")
     set(XYCE_TEST_LABEL_FILTER "weekly")
@@ -434,11 +439,6 @@ else()
     set(MODEL "Experimental")
     set(TESTGROUP "Experimental")
   endif()
-endif()
-
-# default "nightly"
-if(NOT DEFINED XYCE_TEST_LABEL_FILTER)
-  set(XYCE_TEST_LABEL_FILTER "nightly")
 endif()
 
 # default "nightly"
@@ -486,9 +486,6 @@ else()
     set(CTEST_CONFIGURATION_TYPE "Release")
   endif()
 endif()
-set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} ${XYCE_CMAKE_CONF_ARG}")
-set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} -DBUILD_TESTING=${BUILD_TESTING}")
-set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} ${CTEST_SOURCE_DIRECTORY}")
 
 # ASAN
 if(BUILD_WITH_SANITIZERS)
@@ -524,6 +521,15 @@ if(BUILD_WITH_SANITIZERS)
   endif()
 endif()
 
+# coverage
+if(COVERAGE)
+  set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} -DXyce_ENABLE_CODE_COVERAGE=ON")
+endif()
+
+set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} ${XYCE_CMAKE_CONF_ARG}")
+set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} -DBUILD_TESTING=${BUILD_TESTING}")
+set(CTEST_CONFIGURE_COMMAND "${CTEST_CONFIGURE_COMMAND} ${CTEST_SOURCE_DIRECTORY}")
+
 if(VERBOSITY GREATER 1)
   message("[VERB1]: CTEST_CONFIGURE_COMMAND = ${CTEST_CONFIGURE_COMMAND}")
 endif()
@@ -554,6 +560,20 @@ if(buildReturnVal EQUAL 0)
     if(VERBOSITY GREATER 1)
       message("[VERB1]: ctest_test() exited with return value: ${testReturnVal}")
     endif()
+
+    # generate code coverage information
+    if(COVERAGE)
+      # Coverage
+      find_program(CTEST_COVERAGE_COMMAND 
+        NAMES gcov
+        REQUIRED)
+
+      ctest_coverage(CAPTURE_CMAKE_ERROR covRetVal)
+      if(VERBOSITY GREATER 1)
+        message("[VERB1]: ctest_coverage() exited with return value: ${covRetVal}")
+      endif()
+    endif()
+
   else()
     # DEPRECATED: We can get rid of this once fully ctest-ified. It's
     # only relevant for run_xyce_regression
@@ -683,7 +703,7 @@ endif()
 
 if(DASHSUBMIT)
   ctest_submit(RETRY_COUNT 10 
-    RETRY_DELAY 30,
+    RETRY_DELAY 30
     RETURN_VALUE submitReturnVal)
   if(VERBOSITY GREATER_EQUAL 1)
     message("[VERB1]: ctest_submit() exited with return value: ${submitReturnVal}")

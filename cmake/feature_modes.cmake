@@ -65,6 +65,9 @@ option(Xyce_AS_SPECIAL_CHARON_TPL "Build xyce library as required by charon" OFF
 # to use built-in sanitizers (ASAN,LSAN,UBSAN)
 option(BUILD_WITH_SANITIZERS "Enable the built-in sanitizers for the build and tests" OFF)
 
+# to enable code coverage results from tests
+option(Xyce_ENABLE_CODE_COVERAGE "Enable code coverage for testing" OFF)
+
 # Verbose output
 set(Xyce_VERBOSE_CONDUCTANCE       FALSE CACHE BOOL "Enable verbose output for ???")
 set(Xyce_VERBOSE_LINEAR            FALSE CACHE BOOL "Enable verbose output in the linear solver")
