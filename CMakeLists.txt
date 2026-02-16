@@ -59,6 +59,10 @@ include(cmake/sanitizers.cmake)
 
 setup_sanitizer_interface()
 
+if(Xyce_ENABLE_CODE_COVERAGE)
+  include(cmake/CodeCoverage.cmake)
+endif()
+
 # print out Xyce-related variables
 if (CMAKE_VERSION VERSION_GREATER "3.24.0")
   cmake_language(GET_MESSAGE_LOG_LEVEL LOG_LEVEL)

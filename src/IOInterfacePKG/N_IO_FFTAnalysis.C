@@ -329,12 +329,12 @@ void FFTAnalysis::reset()
 void FFTAnalysis::fixupFFTParameters(Parallel::Machine comm,
   const Util::Op::BuilderManager &op_builder_manager,
   double endSimTime,
-  TimeIntg::StepErrorControl & sec,
+  TimeIntg::StepErrorControl * sec,
   bool fft_accurate,
   bool fftout,
   int fft_mode)
 {
-  secPtr_ = &sec;
+  secPtr_ = sec;
 
   // set these to match the values stored in the FFTMgr class.
   fft_accurate_ = fft_accurate;

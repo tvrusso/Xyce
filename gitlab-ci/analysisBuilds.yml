@@ -1,23 +1,26 @@
+# File: .gitlab-ci/analysisBuilds.yml
 include:
   - gitlab-ci/variables/build-var-sets.yml
 
-##################################
-## GNU, debug, ASAN build of xyce
-GNU_sanitize.buildTest:
-  stage: sanitizerBuildTest
+# -----------------------------------------------------------------
+# Template job that contains everything that is common to the two builds
+# -----------------------------------------------------------------
+.GNU_analysis_template:
+  stage: analysisBuildTest
   tags:
-    - cee-build034
-  id_tokens:
-    CI_JOB_JWT:
-      aud: https://cee-gitlab.sandia.gov
+    - cee.build
   extends:
     - .build_base
     - .gnu_serial_vars
   variables:
+    # The matrix will override these three placeholders
+    BUILD_KIND: ""            # "sanitize" | "coverage"
+    BUILD_SUFFIX: ""          # optional – not used at the moment
+    EXTRA_CTEST: ""           # e.g. "-DBUILD_WITH_SANITIZERS=ON"
+    MYBUILDNAME: "analysis-${archFullName}"   # fallback for non‑matrix runs
     cmakeBuildType: "Debug"
-    MYBUILDNAME: "Sanitizer-${archFullName}"
     TESTSET: "Experimental"
-    branch: ${CI_COMMIT_BRANCH}
+    branch: $CI_COMMIT_BRANCH
     cmakeArgsList: >-
       -DXyce_REGRESSION=ON
       -DXyce_USE_FFT=ON
@@ -33,34 +36,55 @@ GNU_sanitize.buildTest:
       -DXyce_AS_SPECIAL_CHARON_TPL=OFF
       -DXyce_ADMS_MODELS=ON
   script:
-    # activate the virtual environment(s) for testing
+    # ---- activate python / spack environments ----
     - set +e
     - source "${HOME}/.bashrc"
     - set -e
     - module unload aue/anaconda3
     - spack env activate xyceTesting
     - source /projects/xyce_user/pythonVirtEnv/Xyce/bin/activate
-    # hard-code for a "dbg" build of trilinos
+    # ---- hard‑code Trilinos location (same for both) ----
     - export Trilinos_DIR=${trilinosInstallDir}/dbg/${libTypeStr}
     - cloneAllXyceRepos
+    # ---- build the cmake argument list -------------------------------
     - |
       TESTGROUP="Nightly"
       CM_ARGS=$(printf "%s;" ${cmakeArgsList})
       CM_ARGS=${CM_ARGS%;}    # strip final “;”
+      # Append the matrix‑specific flag (if any)
       ctest -DVERBOSITY=5 -C ${cmakeBuildType} \
+        ${EXTRA_CTEST} \
         -DUSE_GITLAB_CI_TESTING=ON \
         -DCDASH_GROUP="Nightly" \
         -DCMAKE_ARGS_LIST="${CM_ARGS}" \
-        -DBUILD_WITH_SANITIZERS=ON \
-        -S ${CI_PROJECT_DIR}/cmake/ctest/xyce-ctest.cmake 2>&1 | tee ${CI_PROJECT_DIR}/logFiles/xyce-ctest-log.txt
+        -S ${CI_PROJECT_DIR}/cmake/ctest/xyce-ctest.cmake \
+        2>&1 | tee ${CI_PROJECT_DIR}/logFiles/xyce-ctest-log.txt
   after_script:
     # copy configure, build and test info from ctest into "logFiles" subdirectory for artifacts
     - rsync -a ${CI_PROJECT_DIR}/repos/build/Testing ${CI_PROJECT_DIR}/logFiles/ctestLogs/
-    - rsync -a ${CI_PROJECT_DIR}/repos/build/test ${CI_PROJECT_DIR}/logFiles/ctestLogs/
+    - rsync -a ${CI_PROJECT_DIR}/repos/build/test    ${CI_PROJECT_DIR}/logFiles/ctestLogs/
   artifacts:
     paths:
       - logFiles
     expire_in: 1 week
     when: always
   rules:
-    - if: $DO_XYCE_SANITIZER_BUILDTEST == "ON" && $CI_PIPELINE_SOURCE == "trigger"
+    - if: $DO_XYCE_ANALYSIS_BUILDTEST == "ON" && $CI_PIPELINE_SOURCE == "trigger"
+
+# -----------------------------------------------------------------
+# Matrix job – one instance for each analysis flavour
+# -----------------------------------------------------------------
+analysis:
+  extends: .GNU_analysis_template
+  parallel:
+    matrix:
+      # ────── Sanitizer build ──────
+      - BUILD_KIND: "sanitize"
+        BUILD_SUFFIX: "Sanitizer-$archFullName"
+        EXTRA_CTEST: "-DBUILD_WITH_SANITIZERS=ON"
+        MYBUILDNAME: "Sanitizer-$archFullName"
+      # ────── Coverage build ──────
+      - BUILD_KIND: "coverage"
+        BUILD_SUFFIX: "Coverage-$archFullName"
+        EXTRA_CTEST: "-DCOVERAGE=ON"
+        MYBUILDNAME: "Coverage-$archFullName"

@@ -107,6 +107,7 @@ target_link_libraries(XyceLib
   PUBLIC Trilinos::all_selected_libs
   PRIVATE $<BUILD_LOCAL_INTERFACE:sanitizers>)
 
+
 if(OpenMP_FOUND)
      target_link_libraries(XyceLib PUBLIC OpenMP::OpenMP_CXX)
 endif()
@@ -126,6 +127,19 @@ target_include_directories (XyceLib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BIN
 target_link_libraries(Xyce 
   PUBLIC XyceLib
   PRIVATE $<BUILD_LOCAL_INTERFACE:sanitizers>)
+
+if(Xyce_ENABLE_CODE_COVERAGE)
+  append_coverage_compiler_flags(XyceLib)
+  append_coverage_compiler_flags(Xyce)
+endif()
+
+message(STATUS "Xyce_ENABLE_CODE_COVERAGE: ${Xyce_ENABLE_CODE_COVERAGE}")
+if(Xyce_ENABLE_CODE_COVERAGE)
+  message(STATUS "Setting up for test coverage analysis")
+  setup_target_for_coverage_gcovr_html(NAME xyce_coverage
+    EXECTUABLE ctest -j32
+    DEPENDENCIES Xyce)
+endif()
 
 # ---- And the installation of them. ----------------
 # Keep this in mind if Xyce needs to support building both static and shared libraries
