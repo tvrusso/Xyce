@@ -83,7 +83,7 @@ public:
     HB *                                hb_analysis = 0,        // HACK TO GET US MOVING FORWARD, should pass output adapter or something
     N_MPDE_Manager *                    mpde_manager = 0);      // HACK TO GET US MOVING FORWARD, should pass output adapter or something
 
-  ~Transient();
+  virtual ~Transient();
 
   void notify(const StepEvent &event);
 
