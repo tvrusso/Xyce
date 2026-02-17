@@ -26,7 +26,7 @@ if(GTest_FOUND)
     
     # Wrap the GTest tests with CTest
     # Setting the test labels looks odd but is needed to overcome a bug in gtest-cmake see https://gitlab.kitware.com/cmake/cmake/-/issues/17812
-    gtest_discover_tests(UTL_Platform_Tests TEST_PREFIX UTL_Platform: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;platform")
-    gtest_discover_tests(UTL_Platform_System_Error_Tests TEST_PREFIX UTL_Platform_Errors: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;platform")
-    gtest_discover_tests(UTL_Platform_Config_Error_Tests TEST_PREFIX UTL_Platform_Errors: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;platform")
+    gtest_discover_tests(UTL_Platform_Tests TEST_PREFIX UTL_Platform: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;platform" DISCOVERY_TIMEOUT 30)
+    gtest_discover_tests(UTL_Platform_System_Error_Tests TEST_PREFIX UTL_Platform_Errors: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;platform" DISCOVERY_TIMEOUT 30)
+    gtest_discover_tests(UTL_Platform_Config_Error_Tests TEST_PREFIX UTL_Platform_Errors: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;platform" DISCOVERY_TIMEOUT 30)
 endif()

@@ -9,7 +9,7 @@ if(GTest_FOUND)
 
     # Wrap the GTest tests with CTest
     # Setting the test labels looks odd but is needed to overcome a bug in gtest-cmake see https://gitlab.kitware.com/cmake/cmake/-/issues/17812
-    gtest_discover_tests(ParsingHelperTests TEST_PREFIX ParsingHelper: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;parsing")
-    gtest_discover_tests(CmdParseTests TEST_PREFIX CmdParse: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;parsing")
+    gtest_discover_tests(ParsingHelperTests TEST_PREFIX ParsingHelper: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;parsing" DISCOVERY_TIMEOUT 30)
+    gtest_discover_tests(CmdParseTests TEST_PREFIX CmdParse: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;parsing" DISCOVERY_TIMEOUT 30)
     
 endif()

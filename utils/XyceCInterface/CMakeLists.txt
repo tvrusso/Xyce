@@ -19,7 +19,7 @@ if(GTest_FOUND AND NOT Xyce_PARALLEL_MPI)
           DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
      # Wrap the GTest tests with CTest
-     gtest_discover_tests( XyceCInterfaceUnitTests TEST_PREFIX XyceCInterfaceUnit: PROPERTIES "LABELS;nightly;LABELS;required:mixedsignal")
+     gtest_discover_tests( XyceCInterfaceUnitTests TEST_PREFIX XyceCInterfaceUnit: PROPERTIES "LABELS;nightly;LABELS;required:mixedsignal" DISCOVERY_TIMEOUT 30)
 endif()
 
 if(BUILD_SHARED_LIBS AND CMAKE_HOST_WIN32 )

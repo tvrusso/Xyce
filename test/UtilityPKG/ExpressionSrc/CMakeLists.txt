@@ -59,11 +59,11 @@ if(GTest_FOUND)
 
      # Wrap the GTest tests with CTest
      # Setting the test labels looks odd but is needed to overcome a bug in gtest-cmake see https://gitlab.kitware.com/cmake/cmake/-/issues/17812
-     gtest_discover_tests(astUnitTest TEST_PREFIX astUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression")
-     gtest_discover_tests(astCopyConstUnitTest TEST_PREFIX astCopyConstUnit: PROPERTIES  "LABELS;nightly;LABELS;unittest;LABELS;expression")
-     gtest_discover_tests(complexParserUnitTest TEST_PREFIX complexParserUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression" )
+     gtest_discover_tests(astUnitTest TEST_PREFIX astUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression" DISCOVERY_TIMEOUT 30)
+     gtest_discover_tests(astCopyConstUnitTest TEST_PREFIX astCopyConstUnit: PROPERTIES  "LABELS;nightly;LABELS;unittest;LABELS;expression" DISCOVERY_TIMEOUT 30)
+     gtest_discover_tests(complexParserUnitTest TEST_PREFIX complexParserUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression" DISCOVERY_TIMEOUT 30)
      if( NOT Xyce_PARALLEL_MPI )
-       gtest_discover_tests(parserUnitTest TEST_PREFIX parserUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression")
+       gtest_discover_tests(parserUnitTest TEST_PREFIX parserUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression" DISCOVERY_TIMEOUT 30)
      endif()
     message(STATUS "Adding expression library unit tests")
 endif()
@@ -193,10 +193,10 @@ if(BUILD_ONLY_UNIT_TESTS)
      
      # Wrap the GTest tests with CTest
      # Setting the test labels looks odd but is needed to overcome a bug in gtest-cmake see https://gitlab.kitware.com/cmake/cmake/-/issues/17812
-     gtest_discover_tests(astUnitTest TEST_PREFIX astUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression")
-     gtest_discover_tests(astCopyConstUnitTest TEST_PREFIX astCopyConstUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression")
-     gtest_discover_tests(complexParserUnitTest TEST_PREFIX complexParserUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression")
-     gtest_discover_tests(parserUnitTest TEST_PREFIX parserUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression")
+     gtest_discover_tests(astUnitTest TEST_PREFIX astUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression" DISCOVERY_TIMEOUT 30)
+     gtest_discover_tests(astCopyConstUnitTest TEST_PREFIX astCopyConstUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression" DISCOVERY_TIMEOUT 30)
+     gtest_discover_tests(complexParserUnitTest TEST_PREFIX complexParserUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression" DISCOVERY_TIMEOUT 30)
+     gtest_discover_tests(parserUnitTest TEST_PREFIX parserUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;expression" DISCOVERY_TIMEOUT 30)
 
     message(STATUS "Adding expression library unit tests")
 endif()

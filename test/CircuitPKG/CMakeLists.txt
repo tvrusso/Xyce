@@ -14,7 +14,7 @@ if(GTest_FOUND)
 
      # Wrap the GTest tests with CTest
      # Setting the test labels looks odd but is needed to overcome a bug in gtest-cmake see https://gitlab.kitware.com/cmake/cmake/-/issues/17812
-     gtest_discover_tests( XyceSimulatorUnitTests TEST_PREFIX XyceSimulatorUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;required:mixedsignal")
+     gtest_discover_tests( XyceSimulatorUnitTests TEST_PREFIX XyceSimulatorUnit: PROPERTIES "LABELS;nightly;LABELS;unittest;LABELS;required:mixedsignal" DISCOVERY_TIMEOUT 30)
 endif()
 
 get_target_property(XyceBuildDir Xyce BINARY_DIR)
