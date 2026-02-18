@@ -354,13 +354,13 @@ int Interface::spiceStrategy ( ParameterSet* paramsPtr )
     Vector tmpVec(*dsPtr_->nextSolutionPtr, *lasSysPtr_);
     groupPtr_->setX(tmpVec);
 
-    sharedSystemPtr_->reset(*dsPtr_->nextSolutionPtr,
-        *rhsVectorPtr_,
-        *jacobianMatrixPtr_,
-        *NewtonVectorPtr_,
-        *gradVectorPtr_,
-        *lasSysPtr_,
-        *this);
+    sharedSystemPtr_->reset(dsPtr_->nextSolutionPtr,
+        rhsVectorPtr_,
+        jacobianMatrixPtr_,
+        NewtonVectorPtr_,
+        gradVectorPtr_,
+        lasSysPtr_,
+        this);
 
     analysisManager_->notify(Analysis::AnalysisEvent(Analysis::AnalysisEvent::DC_OP_GMIN_STEPPING, Analysis::AnalysisEvent::DC));
     isuccess=gminSteppingSolve ( paramsPtr );
@@ -383,13 +383,13 @@ int Interface::spiceStrategy ( ParameterSet* paramsPtr )
       Vector tmpVec(*dsPtr_->nextSolutionPtr, *lasSysPtr_);
       groupPtr_->setX(tmpVec);
       
-      sharedSystemPtr_->reset(*dsPtr_->nextSolutionPtr,
-                              *rhsVectorPtr_,
-                              *jacobianMatrixPtr_,
-                              *NewtonVectorPtr_,
-                              *gradVectorPtr_,
-                              *lasSysPtr_,
-                              *this);
+      sharedSystemPtr_->reset(dsPtr_->nextSolutionPtr,
+                              rhsVectorPtr_,
+                              jacobianMatrixPtr_,
+                              NewtonVectorPtr_,
+                              gradVectorPtr_,
+                              lasSysPtr_,
+                              this);
       
       analysisManager_->notify(Analysis::AnalysisEvent(Analysis::AnalysisEvent::DC_OP_SOURCE_STEPPING, Analysis::AnalysisEvent::DC));
       isuccess=sourceSteppingSolve ( paramsPtr );
@@ -1448,23 +1448,23 @@ int Interface::solve (Nonlinear::NonLinearSolver * nlsTmpPtr)
     //delete sharedSystemPtr_;
     if (sharedSystemPtr_ == 0)
     {
-      sharedSystemPtr_ = new SharedSystem(*dsPtr_->nextSolutionPtr,
-                                          *rhsVectorPtr_,
-                                          *jacobianMatrixPtr_,
-                                          *NewtonVectorPtr_,
-                                          *gradVectorPtr_,
-                                          *lasSysPtr_,
-                                          *this);
+      sharedSystemPtr_ = new SharedSystem(dsPtr_->nextSolutionPtr,
+                                          rhsVectorPtr_,
+                                          jacobianMatrixPtr_,
+                                          NewtonVectorPtr_,
+                                          gradVectorPtr_,
+                                          lasSysPtr_,
+                                          this);
     }
     else
     {
-      sharedSystemPtr_->reset(*dsPtr_->nextSolutionPtr,
-                              *rhsVectorPtr_,
-                              *jacobianMatrixPtr_,
-                              *NewtonVectorPtr_,
-                              *gradVectorPtr_,
-                              *lasSysPtr_,
-                              *this);
+      sharedSystemPtr_->reset(dsPtr_->nextSolutionPtr,
+                              rhsVectorPtr_,
+                              jacobianMatrixPtr_,
+                              NewtonVectorPtr_,
+                              gradVectorPtr_,
+                              lasSysPtr_,
+                              this);
     }
 
     //////////////////////////////////////////////////////////////////////////
@@ -1784,13 +1784,13 @@ int Interface::takeFirstSolveStep (Nonlinear::NonLinearSolver * nlsTmpPtr)
   // Set up the shared system (we have to redo this every time because
   // the object pointed to by nextSolVectorPtrPtr may have changed.
   delete sharedSystemPtr_;
-  sharedSystemPtr_ = new SharedSystem(*dsPtr_->nextSolutionPtr,
-                                      *rhsVectorPtr_,
-                                      *jacobianMatrixPtr_,
-                                      *NewtonVectorPtr_,
-                                      *gradVectorPtr_,
-                                      *lasSysPtr_,
-                                      *this);
+  sharedSystemPtr_ = new SharedSystem(dsPtr_->nextSolutionPtr,
+                                      rhsVectorPtr_,
+                                      jacobianMatrixPtr_,
+                                      NewtonVectorPtr_,
+                                      gradVectorPtr_,
+                                      lasSysPtr_,
+                                      this);
 
   // Reset up the corresponding group as well
   //delete groupPtr_;

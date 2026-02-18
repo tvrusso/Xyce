@@ -69,13 +69,13 @@ namespace N_NLS_NOX {
 // Creator       : 
 // Creation Date : 
 //-----------------------------------------------------------------------------
-SharedSystem::SharedSystem(Linear::Vector& soln,
-			   Linear::Vector& f,
-			   Linear::Matrix& jacobian,
-			   Linear::Vector& newton,
-			   Linear::Vector& gradient,
-			   Linear::System& lasSys,
-			   Interface& interface) :
+SharedSystem::SharedSystem(Linear::Vector * soln,
+			   Linear::Vector * f,
+			   Linear::Matrix * jacobian,
+			   Linear::Vector * newton,
+			   Linear::Vector * gradient,
+			   Linear::System * lasSys,
+			   Interface * interface) :
 
   xyceSolnPtr_(0),
   xyceFPtr_(0),
@@ -115,13 +115,13 @@ SharedSystem::~SharedSystem()
 // Creator       : 
 // Creation Date : 
 //-----------------------------------------------------------------------------
-void SharedSystem::reset(Linear::Vector& x,
-			 Linear::Vector& f,
-			 Linear::Matrix& jacobian,
-			 Linear::Vector& newton,
-			 Linear::Vector& gradient,
-			 Linear::System& lasSys,
-			 Interface& interface)
+void SharedSystem::reset(Linear::Vector * x,
+			 Linear::Vector * f,
+			 Linear::Matrix * jacobian,
+			 Linear::Vector * newton,
+			 Linear::Vector * gradient,
+			 Linear::System * lasSys,
+			 Interface * interface)
 {
   // Clear out old views
   delete xyceSolnPtr_;
@@ -129,16 +129,16 @@ void SharedSystem::reset(Linear::Vector& x,
   delete xyceNewtonPtr_;
   delete xyceGradientPtr_;
 
-  xyceJacobianPtr_ = &jacobian;
-  xyceLasSysPtr_ = &lasSys;
-  xyceInterfacePtr_ = &interface;
+  xyceJacobianPtr_ = jacobian;
+  xyceLasSysPtr_ = lasSys;
+  xyceInterfacePtr_ = interface;
   matrixFreeFlag_ = xyceInterfacePtr_->getMatrixFreeFlag();
 
   // Create views of the data used for fills in xyce
-  xyceSolnPtr_ = new Vector(x, lasSys);
-  xyceFPtr_ = new Vector(f, lasSys);
-  xyceNewtonPtr_ = new Vector(newton, lasSys);
-  xyceGradientPtr_ = new Vector(gradient, lasSys);
+  xyceSolnPtr_ = new Vector(*x, *lasSys);
+  xyceFPtr_ = new Vector(*f, *lasSys);
+  xyceNewtonPtr_ = new Vector(*newton, *lasSys);
+  xyceGradientPtr_ = new Vector(*gradient, *lasSys);
 }
 
 //-----------------------------------------------------------------------------
@@ -329,17 +329,16 @@ const Linear::Matrix& SharedSystem::getJacobian() const
 }
 
 //-----------------------------------------------------------------------------
-// Function      : SharedSystem::getJacobian
+// Function      : SharedSystem::setGroup
 // Purpose       : 
 // Special Notes :
 // Scope         : public
 // Creator       : 
 // Creation Date : 
 //-----------------------------------------------------------------------------
-Linear::Matrix& SharedSystem::getJacobian(const Group* grp)
+void SharedSystem::setGroup(const Group* grp)
 {
   ownerOfJacobian_ = grp;
-  return *xyceJacobianPtr_;
 }
 
 //-----------------------------------------------------------------------------

@@ -77,24 +77,24 @@ class SharedSystem {
 
 public:
 
-  SharedSystem(Xyce::Linear::Vector& x,
-	       Xyce::Linear::Vector& f,
-	       Xyce::Linear::Matrix& jacobian,
-	       Xyce::Linear::Vector& newton,
-	       Xyce::Linear::Vector& gradient,
-	       Xyce::Linear::System& lasSys,
-	       Interface& interface);
+  SharedSystem(Xyce::Linear::Vector * x,
+	       Xyce::Linear::Vector * f,
+	       Xyce::Linear::Matrix * jacobian,
+	       Xyce::Linear::Vector * newton,
+	       Xyce::Linear::Vector * gradient,
+	       Xyce::Linear::System * lasSys,
+	       Interface * interface);
 
   ~SharedSystem();
 
 
-  void reset(Xyce::Linear::Vector& x,
-	     Xyce::Linear::Vector& f,
-	     Xyce::Linear::Matrix& jacobian,
-	     Xyce::Linear::Vector& newton,
-	     Xyce::Linear::Vector& gradient,
-	     Xyce::Linear::System& lasSys,
-	     Interface& interface);
+  void reset(Xyce::Linear::Vector * x,
+	     Xyce::Linear::Vector * f,
+	     Xyce::Linear::Matrix * jacobian,
+	     Xyce::Linear::Vector * newton,
+	     Xyce::Linear::Vector * gradient,
+	     Xyce::Linear::System * lasSys,
+	     Interface * interface);
 
   //---------------------------------------------------------------------------
   // Function      : isJacobianOwner
@@ -137,11 +137,11 @@ public:
 
   Vector& getSolutionVector();
 
-  // Take ownership of const Jacobian.
+  // Get reference to const Jacobian.
   const Xyce::Linear::Matrix& getJacobian() const;
 
-  // Take ownership of Jacobian and get a reference to it.
-  Xyce::Linear::Matrix& getJacobian(const Group* grp);
+  // Set the group for ownership of Jacobian
+  void setGroup(const Group* grp);
 
   // Take ownership of the state vectors.
   void getStateVectors(const Group* grp);
