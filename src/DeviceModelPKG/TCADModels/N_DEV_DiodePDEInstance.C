@@ -578,6 +578,17 @@ Instance::~Instance()
     delete (*it).second;
   }
 
+  for( auto i=0; i<bcVec.size(); i++)
+  {
+    if (bcVec[i].dxdvAllocated)
+    {
+      delete bcVec[i].dxdvPtr;
+      bcVec[i].dxdvPtr = NULL; 
+      bcVec[i].dxdvAllocated = false;
+    }
+  }
+
+
   for (std::map<std::string, PDE_1DElectrode *>::iterator it = electrodeMap.begin(); 
       it != electrodeMap.end(); ++it)
   {
