@@ -89,9 +89,20 @@
   the code, but it is a poor construct.  The null reference has been corrected.
   \\\hline  
   
+ \textbf{Xyce Project Backlog/1034}: HB tests fail in sanitizer builds
+  &  HB tests were failing in sanitizer builds of Xyce because a NULL pointer for the
+  jacobian was assigned to a reference.  This did not effect the results but is technicall
+  wrong.  It has been fixed.
+  \\\hline  
+  
 \textbf{Xyce Project Backlog/1035}: Restart test fails in sanitizer build with NULL pointer binding
   &  A restart test was using a NULL pointer in a memory copy operation.  It did not effect
   normal restart operation but was incorrect.  This issue has been fixed.
+  \\\hline
+  
+\textbf{Xyce Project Backlog/1038}: Use of schedule function on transient line leaked memory
+  &  Using a time dependent function for the max time step, such as the schedule function,
+  leaked memory in transient simulations.  This has been fixed.
   \\\hline
   
 \textbf{Xyce Project Backlog/xxx}: Description
