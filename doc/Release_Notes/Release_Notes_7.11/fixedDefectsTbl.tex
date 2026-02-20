@@ -104,7 +104,17 @@
   &  Using a time dependent function for the max time step, such as the schedule function,
   leaked memory in transient simulations.  This has been fixed.
   \\\hline
+
+\textbf{Xyce Project Backlog/1041}: Uninitialized variable cased test failure in sanitizer build
+  &  An uninitialized variable in the PCE class caused a test failure in a sanitizer build of Xyce.  
+  This issue has been fixed.
+  \\\hline
   
+\textbf{Xyce Project Backlog/1042}: DiodePDE did not free all boundary condition vectors.
+  &  The diode PDE device dynamically allocates some boundary condition vectors and those
+  were not deleted when the simulation finished.  This has been fixed.
+  \\\hline
+   
 \textbf{Xyce Project Backlog/xxx}: Description
   &  Details
   \\\hline
