@@ -153,6 +153,7 @@ PCE::PCE(
       hackOutputCalledBefore2_(false),
       hackOutputAllSamples_(false),
       outputSampleStats_(false),
+      coefsOuterLoop_(false),
 #ifdef Xyce_STOKHOS_ENABLE
       PCEorder_(4),
       resamplePCE_(false),
@@ -897,7 +898,7 @@ void  PCE::setupBlockSystemObjects ()
       solverFactory_->registerPCEBuilder( pceBuilderPtr_ );
       solverFactory_->setNumCoefs( numBlockRows_ );
       solverFactory_->setNumQuadPoints( numQuadPoints_ );
-      solverFactory_->setCoefsOuterLoop (coefsOuterLoop_);
+      solverFactory_->setCoefsOuterLoop( coefsOuterLoop_ );
     }
 
     nonlinearManager_.registerSolverFactory( solverFactory_ );

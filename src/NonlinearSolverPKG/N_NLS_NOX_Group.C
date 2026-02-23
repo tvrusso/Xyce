@@ -115,7 +115,7 @@ Group::Group(const Group& source, NOX::CopyType type) :
     if (source.isJacobian()) {
       //isValidJacobian_ = false;
       isValidJacobian_ = true;
-      sharedSystemPtr_->getJacobian(this);
+      sharedSystemPtr_->setGroup(this);
       haveSolverFactors_ = source.haveSolverFactors_;
     }
 
@@ -211,7 +211,7 @@ NOX::Abstract::Group& Group::operator=(const Group& source)
   // Copy the Jacobian by taking ownership of the shared system
   if (source.isJacobian()) {
     isValidJacobian_ = true;
-    sharedSystemPtr_->getJacobian(this);
+    sharedSystemPtr_->setGroup(this);
     haveSolverFactors_ = source.haveSolverFactors_;
   }
 
