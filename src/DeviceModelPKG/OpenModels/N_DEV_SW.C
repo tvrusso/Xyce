@@ -491,10 +491,7 @@ bool Instance::updateSecondaryState ()
 
   Exp_ptr->evaluate( expVal, expVarDerivs );
   control = expVal;
-
-  // This is not really correct, an interim hack.  This is supposed
-  // to be where we deal with the specification of ON or OFF from the
-  // netlist.
+  
   if (getSolverState().initJctFlag_)
   {
     if (ON)
@@ -933,10 +930,7 @@ bool Master::updateSecondaryState ( double * staDerivVec, double * stoVec )
 
     si.Exp_ptr->evaluate( si.expVal, si.expVarDerivs );
     control = si.expVal;
-
-    // This is not really correct, an interim hack.  This is supposed
-    // to be where we deal with the specification of ON or OFF from the
-    // netlist.
+    
     if (getSolverState().initJctFlag_)
     {
       if (si.ON)
