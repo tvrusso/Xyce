@@ -815,8 +815,8 @@ void computePermutedDFT2(N_UTL_DFTInterfaceDecl<std::vector<double> > & dft,
       Vector& timeVecRef = xt.block(i);
       double val = timeVecRef[j];
       (*inputSignal)[i] = val;
-      if (std::abs<double>(val) > norm1)
-        norm1 = std::abs<double>(val);
+      if (std::abs(val) > norm1)
+        norm1 = std::abs(val);
     }
 
     // Calculate the DFT for the inputSignal.
