@@ -48,10 +48,7 @@
 #include <N_ANP_RegisterAnalysis.h>
 
 #ifdef Xyce_STOKHOS_ENABLE
-// make sure linking against the correct trilinos!
 #include "Stokhos_Sacado.hpp"
-#include "Stokhos_Sacado_Kokkos.hpp"
-#include <Stokhos_Sparse3TensorUtilities.hpp>
 #endif
 
 #include <N_IO_OptionBlock.h>

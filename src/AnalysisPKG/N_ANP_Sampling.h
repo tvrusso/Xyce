@@ -49,9 +49,7 @@
 #include <N_UTL_MachDepParams.h>
 
 #ifdef Xyce_STOKHOS_ENABLE
-// make sure linking against the correct trilinos!
 #include "Stokhos_Sacado.hpp"
-#include "Stokhos_Sacado_Kokkos.hpp"
 #endif
 
 namespace Xyce {
