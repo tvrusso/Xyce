@@ -33,7 +33,9 @@ include:
       -DCMAKE_INSTALL_PREFIX=${xyceInstallDir}
       
   script:
-    - set -e
+    - set -euo pipefail
+    # activate python virtual for xyce build and test
+    - source /projects/xyce_user/pythonVirtEnv/Xyce/bin/activate
     - cloneAllXyceRepos
     # so admsXml will be found
     - export PATH="${PATH}:${admsInstallDir}/${optStr}/bin"
@@ -95,7 +97,7 @@ Intel_OpenMPI.buildTestInstallXyce:
 .build_test_install_xyce_cts:
   extends: .build_test_install_xyce
   script:
-    - set -e
+    - set -euo pipefail
     - cloneAllXyceRepos
     # this appears on the dashboard under "Build Name"
     - export MYBUILDNAME=Xyce/${XYCE_INSTALL_STRING}/${optStr}/${libTypeStr}-${archFullName}
