@@ -59,7 +59,7 @@ include:
     paths:
       - logFiles
       - repos/build
-    expire_in: 1 day
+    expire_in: 1 month
     when: always
   rules:
     - if: $DO_XYCE_BUILDS == "ON" && $CI_PIPELINE_SOURCE == "trigger"
