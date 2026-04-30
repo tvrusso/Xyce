@@ -25,10 +25,13 @@ CI_PROJECT_DIR="$3"
 PATH="/projects/xyce/flexbison/bin:${PATH}"
 export PATH
 
+# activate python virtual for xyce build and test
+source "/projects/xyce_user/pythonVirtEnv/Xyce/bin/activate"
+
 # note use of the use of the pipeline's xyce-ctest.cmake file, NOT the
 # build repos copy
 ctest --timeout 1200 -DVERBOSITY=5 \
   -DNUM_PROCS=${coreCount} \
   -DUSE_GITLAB_CI_TESTING=ON \
   -DCMAKE_ARGS_LIST="${rawCmakeArgsList}" \
-  -S ${CI_PROJECT_DIR}/cmake/ctest/xyce-ctest.cmake
+  -S "${CI_PROJECT_DIR}/cmake/ctest/xyce-ctest.cmake"
