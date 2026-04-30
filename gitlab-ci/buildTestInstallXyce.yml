@@ -61,6 +61,7 @@ include:
     paths:
       - logFiles
       - repos/build
+      - slurm*.out
     expire_in: 1 month
     when: always
   rules:
