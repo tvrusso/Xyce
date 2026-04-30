@@ -40,7 +40,6 @@ include:
     - set +e
     - source "${HOME}/.bashrc"
     - set -e
-    - module unload aue/anaconda3
     - spack env activate xyceTesting
     - source /projects/xyce_user/pythonVirtEnv/Xyce/bin/activate
     # ---- hard‑code Trilinos location (same for both) ----

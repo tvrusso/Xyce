@@ -84,7 +84,6 @@ variables:
     aue/git-lfs
     aue/cmake
     aue/ninja
-    aue/anaconda3
     aue/binutils
     "
 
