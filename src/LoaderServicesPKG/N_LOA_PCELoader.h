@@ -55,11 +55,9 @@
 #include <N_UTL_AssemblyTypes.h>
 #include <N_UTL_OptionBlock.h>
 
-#ifdef Xyce_STOKHOS_ENABLE
 #include <Stokhos_Sacado.hpp>
 #include <Sacado_No_Kokkos.hpp>
 #include <Stokhos_Sparse3TensorUtilities.hpp>
-#endif
 
 // ---------- Forward declarations --------
 
@@ -274,7 +272,6 @@ private:
   Analysis::SweepVector & samplingVector_;
   const std::vector<double> & Y_; 
 
-#ifdef Xyce_STOKHOS_ENABLE
   // many of these objects are copied from the N_ANP_PCE.h header; 
   Teuchos::RCP<const Stokhos::ProductBasis<int,double> > basis_;
 
@@ -294,8 +291,6 @@ private:
 
   Sacado::PCE::OrthogPoly<double, Stokhos::StandardStorage<int,double> > pce_dFdxdVp;
   Sacado::PCE::OrthogPoly<double, Stokhos::StandardStorage<int,double> > pce_dQdxdVp;
-
-#endif
 
   // these are for solving voltage limiting.  
   // They are the size of the original non-block circuit linear problem

@@ -47,9 +47,7 @@
 #include <N_ANP_AnalysisBase.h>
 #include <N_ANP_RegisterAnalysis.h>
 
-#ifdef Xyce_STOKHOS_ENABLE
 #include "Stokhos_Sacado.hpp"
-#endif
 
 #include <N_IO_OptionBlock.h>
 
@@ -227,7 +225,6 @@ private:
 
   bool coefsOuterLoop_;
 
-#ifdef Xyce_STOKHOS_ENABLE
   int PCEorder_;
 
   Teuchos::Array< Teuchos::RCP<const Stokhos::OneDOrthogPolyBasis<int,double> > > bases; 
@@ -251,7 +248,6 @@ private:
   bool useSparseGrid_;
 
   Teuchos::RCP<Linear::Graph> pceGraph;
-#endif
 
   bool stdOutputFlag_;
   int debugLevel_;
