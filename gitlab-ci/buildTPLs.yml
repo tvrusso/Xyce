@@ -88,7 +88,7 @@ include:
   artifacts:
     paths:
       - logFiles
-    expire_in: 1 day
+    expire_in: 1 month
   rules:
     - if: $DO_TPL_BUILDS == "ON" && $CI_PIPELINE_SOURCE == "trigger"
 

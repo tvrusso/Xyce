@@ -36,12 +36,8 @@ include:
       -DXyce_AS_SPECIAL_CHARON_TPL=OFF
       -DXyce_ADMS_MODELS=ON
   script:
-    # ---- activate python / spack environments ----
-    - set +e
-    - source "${HOME}/.bashrc"
-    - set -e
-    - module unload aue/anaconda3
-    - spack env activate xyceTesting
+    - set -euo pipefail
+    # activate python virtual for xyce build and test
     - source /projects/xyce_user/pythonVirtEnv/Xyce/bin/activate
     # ---- hard‑code Trilinos location (same for both) ----
     - export Trilinos_DIR=${trilinosInstallDir}/dbg/${libTypeStr}
@@ -66,7 +62,7 @@ include:
   artifacts:
     paths:
       - logFiles
-    expire_in: 1 week
+    expire_in: 1 month
     when: always
   rules:
     - if: $DO_XYCE_ANALYSIS_BUILDTEST == "ON" && $CI_PIPELINE_SOURCE == "trigger"
